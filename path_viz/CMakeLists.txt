@@ -4,18 +4,12 @@ project(path_viz)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(ament_cmake REQUIRED)
-# find_package(example_interfaces REQUIRED)
-find_package(path_viz_interface REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(path_viz_interface REQUIRED)
 
-rosidl_generate_interfaces(
-  path_viz_interface
-  "msg/Num.msg"
-  "srv/PlotPath.srv")
-
-add_executable(path_viz_service src/viz_service.cpp)
-ament_target_dependencies(path_viz rclcpp path_viz_interface)
-install(TARGETS path_viz
+add_executable(path_viz_server src/viz_service.cpp)
+ament_target_dependencies(path_viz_server rclcpp path_viz_interface)
+install(TARGETS path_viz_server
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

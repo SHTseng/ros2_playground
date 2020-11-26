@@ -6,7 +6,12 @@ from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    path_viz_service = Node(package='path_viz',executable='path_viz', name='path_viz', output='screen')
+    path_viz_service = Node(
+        package='path_viz',
+        executable='path_viz_server',
+        name='path_viz_server',
+        output='screen')
+
     rviz_cmd = Node(
         package='rviz2',
         executable='rviz2',
