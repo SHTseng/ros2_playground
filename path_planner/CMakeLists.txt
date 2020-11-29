@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
-project(path_viz_interface)
+project(path_planner)
 
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(ament_cmake REQUIRED)
-find_package(common_interfaces REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-
-rosidl_generate_interfaces(
-  path_viz_interface
-  "msg/Num.msg"
-  "srv/PlotPath.srv")
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

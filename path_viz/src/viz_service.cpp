@@ -1,24 +1,41 @@
-#include <memory>
 #include "rclcpp/rclcpp.hpp"
-#include "path_viz_interface/msg/num.hpp"
-#include "path_viz_interface/srv/plot_path.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "visualization_msgs/msg/Marker.hpp"
+// #include "visualization_msgs/msg/MarkerArray.hpp"
+#include "nav_msgs/msg/Path.hpp"
 
-void handle_service(
-    const std::shared_ptr<rmw_request_id_t> request_header,
-    const std::shared_ptr<path_viz_interface::srv::PlotPath::Request> request,
-    const std::shared_ptr<path_viz_interface::srv::PlotPath::Response> response)
+#include <memory>
+#include <vector>
+
+class PathListener : public rclcpp::Node
 {
-    response->sum = request->a + request->b + request->c;
-}
+public:
+  explicit PathListener()
+  : Node("path_listener")
+  {
+    sub_ = create_subscription<nav_msgs::msg::Path>("/path", 10, [this](const nav_msgs::msg::Path::SharedPtr msg)
+    {
+      // RCLCPP_INFO(this->get_logger(), "I heard: [%s]", msg->data.c_str());
+      // pub_->publish(*msg);
+    });
+    pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/path_marker", 10);
+  }
 
-int main(int argc, char* argv[])
+private:
+  std::vector<visualization_msgs::msg::Marker> pathToMarker(const nav_msgs::msg::Path::SharedPtr msg)
+  {
+    return {};
+  }
+
+  rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr sub_;
+  rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub_;
+};
+
+int main(int argc, char * argv[])
 {
-    rclcpp::init(argc, argv);
-    rclcpp::Node::SharedPtr rcl_node = rclcpp::Node::make_shared("minimal_service");
-
-    auto server = rcl_node->create_service<path_viz_interface::srv::PlotPath>("PlotPath", &handle_service);
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Start path visualization service.");
-
-    rclcpp::spin(rcl_node);
-    rclcpp::shutdown();
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<PathListener>());
+  rclcpp::shutdown();
+  return 0;
 }
