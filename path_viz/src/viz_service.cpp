@@ -25,6 +25,10 @@ public:
 private:
   std::vector<visualization_msgs::msg::Marker> pathToMarker(const nav_msgs::msg::Path::SharedPtr msg)
   {
+    // for(const auto& i : (*msg))
+    // {
+      
+    // }
     return {};
   }
 
